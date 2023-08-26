@@ -13,7 +13,7 @@ export async function getServerSideProps() {
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({ data }: { data: { time: string } }) {
-  const serverData = JSON.parse(data);
+  //const serverData = JSON.parse(data);
   const [time, setTime] = useState<Date | null>(null);
   useEffect(() => {
       fetch('/api/time')
