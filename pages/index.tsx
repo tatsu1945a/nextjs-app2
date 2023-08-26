@@ -2,10 +2,25 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
+import { useState, useEffect } from 'react'
+
+export async function getServerSideProps() {
+  const data = JSON.stringify({ time: new Date() });
+  return { props: { data } };
+}
+
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function Home({ data }: { data: { time: string } }) {
+  const serverData = JSON.parse(data);
+  const [time, setTime] = useState<Date | null>(null);
+  useEffect(() => {
+      fetch('/api/time')
+      .then(res => res.json())
+      .then(json => setTime(new Date(json.time)));
+  }, []);
+
   return (
     <>
       <Head>
@@ -19,7 +34,13 @@ export default function Home() {
           <p>
             Get started by editing&nbsp;
             <code className={styles.code}>pages/index.tsx</code>
+
           </p>
+          <a href="https://nextjs.org">
+                    Next.js!{" "}
+                    {time &&
+                    `The time is ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`}
+                </a>
           <div>
             <a
               href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
